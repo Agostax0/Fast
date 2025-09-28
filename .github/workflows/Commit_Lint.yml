@@ -13,14 +13,10 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: LS
-        run: ls -ahl ./
-
       - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
 
       - name: Install commitlint
         run: npm install -D @commitlint/cli @commitlint/config-conventional
