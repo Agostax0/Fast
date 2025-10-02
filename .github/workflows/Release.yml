@@ -1,0 +1,64 @@
+name: Release APK
+
+permissions:
+    contents: write
+
+on:
+    push:
+        branches: 
+            - 'master'
+
+jobs:
+    release:
+        name: Release APK
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          
+        - name: Install Node
+          uses: actions/setup-node@v5
+          with:
+            node-version: 20
+        
+        - name: NPM clean install
+          run: npm install semantic-release
+        
+        - name: Semantic Release
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          run: npx semantic-release #--dry-run
+          
+        - name: Get generated tag
+          id: get_version
+          run: |
+            VERSION=$(git describe --tags --abbrev=0)
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+        # - name: Echo version generated
+        #   run: echo "$VERSION"    
+          
+        - name: Setup JDK
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'jetbrains'
+            java-version: '21'
+            cache: 'gradle'
+
+        - name: Change gradle permission
+          run: chmod +x ./gradlew
+
+        - name: Bundle the app
+          run: ./gradlew assemble
+
+
+        - name: Upload apk
+          uses: svenstaro/upload-release-action@v2
+          with:
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ env.VERSION }}
+            file: ./app/build/outputs/apk/release/*release*.apk
+            asset_name: release-${ env.VERSION }.apk
+
+
