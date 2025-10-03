@@ -1,0 +1,14 @@
+{
+    "branches": ["main"],
+    "plugins": [
+        "@sematic-release/commit-analyzer",
+        "@sematic-release/release-notes-generator",
+        "@sematic-release/github",
+        "@sematic-release/git"
+    ],
+    "github": {
+        "asserts": [
+            { "path": "./app/build/outputs/apk/release/*release*.apk", "label": "Release APK"}
+        ]
+    }
+}

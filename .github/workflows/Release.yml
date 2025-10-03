@@ -24,6 +24,12 @@ jobs:
           with:
             node-version: 20
         
+        - name: package-lock
+          run: |
+            if [! -f package-lock.json ]; then
+              npm install --package-lock-only
+            fi    
+
         - name: NPM clean install
           run: npm install semantic-release
         
