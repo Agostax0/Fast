@@ -9,6 +9,7 @@ on:
     push:
         branches: 
             - 'master'
+    workflow_dispatch:        
 
 jobs:
     release:
@@ -44,9 +45,6 @@ jobs:
             VERSION=$(git describe --tags --abbrev=0)
             echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-        - name: Echo version generated
-          run: echo "$VERSION"    
-          
         - name: Setup JDK
           uses: actions/setup-java@v4
           with:
