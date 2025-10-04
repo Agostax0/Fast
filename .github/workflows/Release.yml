@@ -70,6 +70,6 @@ jobs:
             repo_token: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ env.VERSION }}
             file: ./release.apk
-            asset_name: release-${ env.VERSION }.apk
+            asset_name: release-${{ env.VERSION }}.apk
 
 
