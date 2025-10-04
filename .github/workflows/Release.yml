@@ -32,12 +32,12 @@ jobs:
             fi    
 
         - name: NPM clean install
-          run: npm install semantic-release
+          run: npm install --save-dev semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
         
         - name: Semantic Release
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-          run: npx semantic-release #--dry-run
+          run: npx semantic-release 
           
         - name: Get generated tag
           id: get_version
@@ -58,13 +58,15 @@ jobs:
         - name: Bundle the app
           run: ./gradlew assemble
 
+        - name: Move Release APK
+          run: mv ./app/build/outputs/apk/release/*release*.apk ./release.apk
 
         - name: Upload apk
           uses: svenstaro/upload-release-action@v2
           with:
             repo_token: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ env.VERSION }}
-            file: ./app/build/outputs/apk/release/*release*.apk
+            file: ./release.apk
             asset_name: release-${ env.VERSION }.apk
 
 
