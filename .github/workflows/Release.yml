@@ -23,17 +23,20 @@ jobs:
         - name: Install Node
           uses: actions/setup-node@v5
           with:
-            node-version: 20
+            node-version: 'lts/*'
         
         - name: package-lock
           run: |
-            if [! -f package-lock.json ]; then
+            if [ ! -f package-lock.json ]; then
               npm install --package-lock-only
             fi    
 
         - name: NPM clean install
           run: npm install --save-dev semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github
         
+        - name: Uninstall NPM Publish
+          run: npm uninstall @semantic-release/npm
+
         - name: Semantic Release
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
@@ -67,6 +70,6 @@ jobs:
             repo_token: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ env.VERSION }}
             file: ./release.apk
-            asset_name: release-${ env.VERSION }.apk
+            asset_name: release-${{ env.VERSION }}.apk
 
 
